@@ -1,3 +1,5 @@
+//server.js
+
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -13,10 +15,7 @@ connectDB();
 
 const app = express();   // ✅ APP MUST BE CREATED BEFORE USE
 
-app.use(cors({
-  origin: "http://localhost:5173",
-  credentials: true
-}));
+app.use(cors());
 
 app.use(express.json());
 app.use(passport.initialize());

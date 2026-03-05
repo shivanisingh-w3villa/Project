@@ -1,34 +1,63 @@
+//profileController.js
+
+import fs from "fs";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import s3 from "../config/s3.js";
 import User from "../models/user.js";
-import PDFDocument from "pdfkit";
+import { uploadToStorj } from "../services/storjService.js";
+
+
+
+/* =========================
+   GET PROFILE
+========================= */
 
 export const getProfile = async (req, res) => {
-  const user = await User.findById(req.user.id);
-  res.json(user);
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+
+    res.json(user);
+
+  } catch (error) {
+    console.error("Get profile error:", error);
+    res.status(500).json({ message: "Failed to fetch profile" });
+  }
 };
+
+
+/* =========================
+   UPDATE ADDRESS
+========================= */
 
 export const updateAddress = async (req, res) => {
-  const { address, lat, lng } = req.body;
+  try {
+    const { address } = req.body;
 
-  await User.findByIdAndUpdate(req.user.id, {
-    address,
-    location: { lat, lng },
-  });
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { address },
+      { new: true }
+    ).select("-password");
 
-  res.json({ message: "Address updated" });
+    res.json(user);
+
+  } catch (error) {
+    console.error("Update address error:", error);
+    res.status(500).json({ message: "Failed to update address" });
+  }
 };
+
+
+/* =========================
+   UPLOAD PROFILE IMAGE
+========================= */
 
 export const uploadProfilePicture = async (req, res) => {
   try {
-    const userId = req.user.id;
-    const file = req.file;
 
-    if (!file) {
-      return res.status(400).json({ message: "No file uploaded" });
-    }
+    const imageUrl = await uploadToStorj(req.file);
 
-    const imageUrl = `http://localhost:5000/uploads/${file.filename}`;
-
-    await User.findByIdAndUpdate(userId, {
+    await User.findByIdAndUpdate(req.user.id, {
       profileImage: imageUrl,
     });
 
@@ -38,28 +67,35 @@ export const uploadProfilePicture = async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Upload failed" });
+    console.error("Upload error:", error);
+    res.status(500).json({ message: "Image upload failed" });
   }
 };
 
+
+/* =========================
+   DOWNLOAD PROFILE
+========================= */
+
 export const downloadProfile = async (req, res) => {
-  const user = await User.findById(req.user.id);
 
-  const doc = new PDFDocument();
+  try {
 
-  res.setHeader("Content-Type", "application/pdf");
-  res.setHeader(
-    "Content-Disposition",
-    "attachment; filename=profile.pdf"
-  );
+    const user = await User.findById(req.user.id).select("-password");
 
-  doc.pipe(res);
+    const profileData = {
+      name: user.name,
+      email: user.email,
+      address: user.address,
+      profileImage: user.profileImage
+    };
 
-  doc.fontSize(18).text("User Profile");
-  doc.text(`Name: ${user.name}`);
-  doc.text(`Email: ${user.email}`);
-  doc.text(`Address: ${user.address || "Not set"}`);
+    res.json(profileData);
 
-  doc.end();
+  } catch (error) {
+
+    console.error("Download profile error:", error);
+    res.status(500).json({ message: "Failed to download profile" });
+
+  }
 };
