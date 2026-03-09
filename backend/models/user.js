@@ -41,6 +41,23 @@ const userSchema = new mongoose.Schema(
         type: Number,
       },
     },
+
+    /* ===== PRICING PLANS ===== */
+    plan: {
+      type: String,
+      enum: ["free", "silver", "gold"],
+      default: "free",
+    },
+
+    planExpiration: {
+      type: Date,
+    },
+
+    planStatus: {
+      type: String,
+      enum: ["active", "expired"],
+      default: "active",
+    },
   },
   { timestamps: true }
 );

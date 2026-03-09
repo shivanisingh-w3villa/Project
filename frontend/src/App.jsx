@@ -5,6 +5,8 @@ import Auth from "./pages/Auth";
 import Home from "./pages/Home";
 import OAuthSuccess from "./pages/OAuthSuccess";
 import Profile from "./pages/Profile";
+import Payment from "./pages/Payment";
+import Admin from "./pages/Admin";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -34,6 +36,26 @@ function App() {
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Protected Payment */}
+        <Route
+          path="/payment"
+          element={
+            <ProtectedRoute>
+              <Payment />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Protected Admin */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <Admin />
             </ProtectedRoute>
           }
         />
