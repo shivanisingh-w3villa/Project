@@ -58,6 +58,13 @@ const userSchema = new mongoose.Schema(
       enum: ["active", "expired"],
       default: "active",
     },
+
+    // role field for authorization
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
   },
   { timestamps: true }
 );

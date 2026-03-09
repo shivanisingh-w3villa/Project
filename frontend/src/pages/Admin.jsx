@@ -1,6 +1,7 @@
 // filepath: frontend/src/pages/Admin.jsx
 import { useState, useEffect } from "react";
 import axios from "../api/axios";
+import Layout from "../components/Layout";
 import "../styles/admin.css";
 
 export default function Admin() {
@@ -8,14 +9,36 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
   const [editingUser, setEditingUser] = useState(null);
 
+  // filters/pagination/search state
+  const [search, setSearch] = useState("");
+  const [planFilter, setPlanFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [roleFilter, setRoleFilter] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
+  const [total, setTotal] = useState(0);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [search, planFilter, statusFilter, roleFilter, page]);
 
   const fetchUsers = async () => {
+    setLoading(true);
     try {
-      const response = await axios.get("/admin/users");
-      setUsers(response.data);
+      const response = await axios.get("/admin/users", {
+        params: {
+          search,
+          plan: planFilter,
+          status: statusFilter,
+          role: roleFilter,
+          page,
+          limit,
+        },
+      });
+
+      setUsers(response.data.users);
+      setTotal(response.data.total);
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
@@ -23,13 +46,17 @@ export default function Admin() {
     }
   };
 
-  const updateUserPlan = async (userId, plan, planExpiration) => {
+  // update both plan and role if provided
+  const updateUser = async (userId, plan, planExpiration, role) => {
     try {
       await axios.put(`/admin/user/${userId}/plan`, { plan, planExpiration });
+      if (role) {
+        await axios.put(`/admin/user/${userId}/role`, { role });
+      }
       fetchUsers(); // Refresh the list
       setEditingUser(null);
     } catch (error) {
-      console.error("Error updating user plan:", error);
+      console.error("Error updating user:", error);
     }
   };
 
@@ -43,11 +70,37 @@ export default function Admin() {
     }
   };
 
-  if (loading) return <div className="loading-state">Loading users...</div>;
+  if (loading) return <Layout><div className="loading-state">Loading users...</div></Layout>;
 
   return (
-    <div className="admin-container">
+    <Layout showBackButton backLink="/home">
+      <div className="admin-container">
       <h1>Admin Panel - User Management</h1>
+
+      <div className="controls">
+        <input
+          type="text"
+          placeholder="Search by name or email"
+          value={search}
+          onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+        />
+        <select value={planFilter} onChange={(e) => { setPlanFilter(e.target.value); setPage(1); }}>
+          <option value="">All Plans</option>
+          <option value="free">Free</option>
+          <option value="silver">Silver</option>
+          <option value="gold">Gold</option>
+        </select>
+        <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}>
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="expired">Expired</option>
+        </select>
+        <select value={roleFilter} onChange={(e) => { setRoleFilter(e.target.value); setPage(1); }}>
+          <option value="">All Roles</option>
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
 
       <div className="users-table">
         <table>
@@ -55,6 +108,7 @@ export default function Admin() {
             <tr>
               <th>Name</th>
               <th>Email</th>
+              <th>Role</th>
               <th>Plan</th>
               <th>Status</th>
               <th>Expiration</th>
@@ -66,6 +120,7 @@ export default function Admin() {
               <tr key={user._id}>
                 <td>{user.name}</td>
                 <td>{user.email}</td>
+                <td>{user.role || "user"}</td>
                 <td>
                   <span
                     style={{
@@ -89,9 +144,9 @@ export default function Admin() {
                 </td>
                 <td>
                   {editingUser === user._id ? (
-                    <PlanEditor
+                    <UserEditor
                       user={user}
-                      onSave={(plan, expiration) => updateUserPlan(user._id, plan, expiration)}
+                      onSave={(plan, expiration, role) => updateUser(user._id, plan, expiration, role)}
                       onCancel={() => setEditingUser(null)}
                     />
                   ) : (
@@ -99,7 +154,7 @@ export default function Admin() {
                       onClick={() => setEditingUser(user._id)}
                       className="edit-button"
                     >
-                      Edit Plan
+                      Edit
                     </button>
                   )}
                 </td>
@@ -108,23 +163,49 @@ export default function Admin() {
           </tbody>
         </table>
       </div>
-    </div>
+
+      {/* pagination controls */}
+      <div className="pagination">
+        <button
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={page === 1}
+        >
+          Previous
+        </button>
+        <span>
+          Page {page} of {Math.ceil(total / limit) || 1}
+        </span>
+        <button
+          onClick={() => setPage((p) => p + 1)}
+          disabled={page * limit >= total}
+        >
+          Next
+        </button>
+      </div>
+      </div>
+    </Layout>
   );
 }
 
-function PlanEditor({ user, onSave, onCancel }) {
+function UserEditor({ user, onSave, onCancel }) {
   const [plan, setPlan] = useState(user.plan);
   const [expiration, setExpiration] = useState(
     user.planExpiration ? new Date(user.planExpiration).toISOString().slice(0, 16) : ""
   );
+  const [role, setRole] = useState(user.role || "user");
 
   const handleSave = () => {
     const expDate = plan === "free" ? null : expiration ? new Date(expiration) : null;
-    onSave(plan, expDate);
+    onSave(plan, expDate, role);
   };
 
   return (
     <div className="plan-editor">
+      <select value={role} onChange={(e) => setRole(e.target.value)}>
+        <option value="user">User</option>
+        <option value="admin">Admin</option>
+      </select>
+
       <select value={plan} onChange={(e) => setPlan(e.target.value)}>
         <option value="free">Free</option>
         <option value="silver">Silver</option>
@@ -142,3 +223,4 @@ function PlanEditor({ user, onSave, onCancel }) {
     </div>
   );
 }
+

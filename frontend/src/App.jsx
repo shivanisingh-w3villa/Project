@@ -8,6 +8,7 @@ import Profile from "./pages/Profile";
 import Payment from "./pages/Payment";
 import Admin from "./pages/Admin";
 import ProtectedRoute from "./components/ProtectedRoute";
+import "./App.css";
 
 function App() {
   return (
@@ -54,7 +55,7 @@ function App() {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requiredRole="admin">
               <Admin />
             </ProtectedRoute>
           }

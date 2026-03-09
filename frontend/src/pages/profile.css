@@ -1,549 +1,339 @@
 /* =====================================================
-PROFILE PAGE - PROFESSIONAL STYLESHEET
+PROFILE PAGE - PROFESSIONAL STYLES
 ===================================================== */
 
-:root {
-
---primary: #2563eb;
---primary-dark: #1d4ed8;
-
---secondary: #64748b;
-
---success: #10b981;
---danger: #ef4444;
-
---bg: #fdfdf8;
---card-bg: #abe2e6;
-
---text-main: #1e293b;
---text-light: #64748b;
-
---border: #e5e7eb;
-
---radius: 15px;
-
+.profile-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--spacing-xl) 0;
 }
 
-/* =====================================================
-GLOBAL
-===================================================== */
-
-*{
-box-sizing: border-box;
+.profile-header {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
 }
 
-body{
-margin:0;
-font-family:
--apple-system,
-BlinkMacSystemFont,
-"Segoe UI",
-Roboto,
-Ubuntu,
-sans-serif;
-
-background: var(--bg);
-color: var(--text-main);
+.profile-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  margin-bottom: var(--spacing-xs);
 }
 
-/* =====================================================
-PAGE CONTAINER
-===================================================== */
-
-.profile-container{
-
-max-width: 1000px;
-margin: auto;
-
-padding: 40px 20px;
-
+.profile-subtitle {
+  color: var(--text-secondary);
+  margin: 0;
 }
 
-/* =====================================================
-HEADER
-===================================================== */
-
-.profile-header{
-text-align: center;
-margin-bottom: 40px;
+.profile-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--spacing-lg);
 }
 
-.profile-title{
-
-font-size: 32px;
-font-weight: 700;
-
+@media (max-width: 768px) {
+  .profile-content {
+    grid-template-columns: 1fr;
+  }
 }
 
-.profile-subtitle{
-
-color: var(--text-light);
-margin-top: 6px;
-
-}
-
-/* =====================================================
-GRID LAYOUT
-===================================================== */
-
-.profile-content{
-
-display: grid;
-grid-template-columns: 2fr 1fr;
-gap: 24px;
-
-}
-
-/* =====================================================
-CARDS
-===================================================== */
-
+/* Cards */
 .profile-image-section,
 .user-details-section,
 .download-section,
-.address-section{
-
-background: var(--card-bg);
-
-border-radius: var(--radius);
-padding: 24px;
-
-border: 1px solid var(--border);
-
-box-shadow:
-0 3px 8px rgba(0,0,0,0.05);
-
-transition: 0.2s;
-
+.address-section,
+.plan-section {
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  transition: all var(--transition-base);
 }
 
 .profile-image-section:hover,
 .user-details-section:hover,
 .download-section:hover,
-.address-section:hover{
-
-transform: translateY(-2px);
-
-}
-
-/* =====================================================
-PROFILE IMAGE
-===================================================== */
-
-.profile-image-container{
-
-display:flex;
-flex-direction:column;
-align-items:center;
-
-}
-
-.profile-image{
-
-width:140px;
-height:140px;
-
-border-radius:50%;
-object-fit:cover;
-
-border:5px solid var(--primary);
-
-box-shadow:0 4px 12px rgba(0,0,0,0.15);
-
-margin-bottom:16px;
-
-}
-
-.no-image{
-
-width:140px;
-height:140px;
-
-border-radius:50%;
-
-border:2px dashed var(--border);
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-font-size:14px;
-color:var(--text-light);
-
-margin-bottom:16px;
-
-}
-
-/* =====================================================
-UPLOAD SECTION
-===================================================== */
-
-.upload-section{
-
-margin-top:20px;
-
-}
-
-.upload-input{
-
-width:100%;
-padding:14px;
-
-border:2px dashed #cbd5e1;
-border-radius:var(--radius);
-
-background:#f8fafc;
-
-margin-bottom:12px;
-
-cursor:pointer;
-
-}
-
-.upload-input:hover{
-
-border-color:var(--primary);
-
-}
-
-.upload-button{
-
-width:100%;
-padding:12px;
-
-background:linear-gradient(135deg,var(--primary),var(--primary-dark));
-
-color:white;
-border:none;
-
-border-radius:var(--radius);
-
-font-weight:600;
-
-cursor:pointer;
-
-transition:0.2s;
-
-}
-
-.upload-button:hover{
-
-transform:translateY(-1px);
-box-shadow:0 4px 10px rgba(37,99,235,0.4);
-
-}
-
-.upload-button:disabled{
-
-background:#94a3b8;
-cursor:not-allowed;
-
-}
-
-/* =====================================================
-USER DETAILS
-===================================================== */
-
-.detail-group{
-
-margin-bottom:16px;
-
-}
-
-.detail-label{
-
-font-weight:600;
-margin-bottom:4px;
-
-}
-
-.detail-value{
-
-color:var(--text-light);
-
-}
-
-/* =====================================================
-ADDRESS SECTION
-===================================================== */
-
-.address-display{
-
-display:flex;
-justify-content:space-between;
-align-items:center;
-
-}
-
-.edit-address-button{
-
-padding:6px 14px;
-
-background:var(--secondary);
-color:white;
-
-border:none;
-border-radius:6px;
-
-font-size:13px;
-
-cursor:pointer;
-
-}
-
-.edit-address-button:hover{
-
-background:#475569;
-
-}
-
-/* =====================================================
-ADDRESS EDIT FORM
-===================================================== */
-
-.address-edit-form{
-
-margin-top:14px;
-
-}
-
-.address-input{
-
-width:100%;
-
-padding:10px;
-
-border:1px solid var(--border);
-border-radius:6px;
-
-}
-
-.address-buttons{
-
-display:flex;
-gap:10px;
-
-margin-top:10px;
-
-}
-
-.save-address-button{
-
-flex:1;
-
-padding:10px;
-
-background:var(--success);
-color:white;
-
-border:none;
-border-radius:6px;
-
-cursor:pointer;
-
-}
-
-.cancel-address-button{
-
-flex:1;
-
-padding:10px;
-
-background:var(--secondary);
-color:white;
-
-border:none;
-border-radius:6px;
-
-}
-
-/* =====================================================
-DOWNLOAD SECTION
-===================================================== */
-
-.download-title{
-
-font-weight:600;
-margin-bottom:10px;
-
-}
-
-.download-buttons{
-
-display:flex;
-gap:12px;
-margin-top:10px;
-
-}
-
-.download-button{
-
-flex:1;
-
-padding:12px;
-
-border:none;
-border-radius:8px;
-
-font-weight:600;
-
-cursor:pointer;
-
-color:rgb(145, 34, 19);
-
-}
-
-.download-json{
-
-background:#1d4ed8;
-
-}
-
-.download-csv{
-
-background:#10b981;
-
-}
-
-.download-button:hover{
-
-opacity:0.9;
-
-}
-
-/* =====================================================
-MAP SECTION
-===================================================== */
-
-.map-section{
-
-margin-top:30px;
-
-}
-
-.map-container{
-
-height:350px;
-
-border-radius:10px;
-overflow:hidden;
-
-border:1px solid var(--border);
-
-}
-
-.map-placeholder{
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-height:100%;
-
-color:var(--text-light);
-
-}
-
-/* =====================================================
-LOADING / ERROR
-===================================================== */
-
-.loading-state,
-.error-state{
-
-display:flex;
-justify-content:center;
-align-items:center;
-
-min-height:300px;
-
-font-size:18px;
-
-}
-
-.error-state{
-
-color:var(--danger);
-
-}
-
-/* =====================================================
-RESPONSIVE
-===================================================== */
-
-@media(max-width:768px){
-
-.profile-content{
-
-grid-template-columns:1fr;
-
-}
-
-.download-buttons{
-
-flex-direction:column;
-
-}
-
-.profile-image{
-
-width:110px;
-height:110px;
-
-}
-
-}
-
-@media(max-width:480px){
-
-.profile-container{
-
-padding:20px 10px;
-
-}
-
-.profile-title{
-
-font-size:24px;
-
-}
-
-.map-container{
-
-height:250px;
-
-}
-
-}
-
-/* =====================================================
-PLAN SECTION
-===================================================== */
-
-.plan-section {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  padding: 24px;
-  border: 1px solid var(--border);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-  transition: 0.2s;
-}
-
+.address-section:hover,
 .plan-section:hover {
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
+/* Profile Image */
+.profile-image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.profile-image {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--primary);
+  box-shadow: var(--shadow-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.no-image {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 2px dashed var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Upload Section */
+.upload-section {
+  margin-top: var(--spacing-md);
+}
+
+.upload-input {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--border-radius);
+  background: var(--gray-50);
+  cursor: pointer;
+  margin-bottom: var(--spacing-sm);
+}
+
+.upload-input:hover {
+  border-color: var(--primary);
+}
+
+.upload-button {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.upload-button:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.upload-button:disabled {
+  background: var(--gray-300);
+  cursor: not-allowed;
+}
+
+/* User Details */
+.detail-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.detail-label {
+  display: block;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-xs);
+}
+
+.detail-value {
+  color: var(--text-primary);
+}
+
+/* Download Section */
+.download-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+}
+
+.download-buttons {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.download-button {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: white;
+}
+
+.download-button:first-child {
+  background: var(--primary);
+}
+
+.download-button:first-child:hover {
+  background: var(--primary-hover);
+}
+
+.download-button:last-child {
+  background: var(--success);
+}
+
+.download-button:last-child:hover {
+  background: #059669;
+}
+
+/* Plan Section */
 .upgrade-button {
   background: var(--primary);
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius);
   cursor: pointer;
-  font-size: 14px;
-  transition: background 0.2s;
+  font-weight: 500;
+  transition: all var(--transition-fast);
 }
 
 .upgrade-button:hover {
-  background: var(--primary-dark);
+  background: var(--primary-hover);
 }
+
+/* Address Section */
+.address-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.edit-address-button {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--secondary);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.edit-address-button:hover {
+  background: var(--secondary-hover);
+}
+
+/* Address Edit Form */
+.address-edit-form {
+  margin-top: var(--spacing-md);
+}
+
+.address-alert {
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.address-alert.warning {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  color: #856404;
+}
+
+.address-alert.info {
+  background: #d1ecf1;
+  border: 1px solid #17a2b8;
+  color: #0c5460;
+}
+
+.address-alert.error {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+}
+
+.address-input {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+}
+
+.address-buttons {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.save-address-button {
+  flex: 1;
+  padding: var(--spacing-sm);
+  background: var(--success);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.cancel-address-button {
+  flex: 1;
+  padding: var(--spacing-sm);
+  background: var(--gray-200);
+  color: var(--text-primary);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* Suggestions */
+.suggestions-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--spacing-xs) 0;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  max-height: 200px;
+  overflow-y: auto;
+  background: white;
+}
+
+.suggestion-item {
+  padding: var(--spacing-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.suggestion-item:hover {
+  background: var(--gray-50);
+}
+
+/* Map Section */
+.map-section {
+  margin-top: var(--spacing-xl);
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+}
+
+.map-section h3 {
+  margin-bottom: var(--spacing-sm);
+}
+
+.map-container {
+  height: 350px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.map-section small {
+  display: block;
+  margin-top: var(--spacing-sm);
+  color: var(--text-muted);
+}
+

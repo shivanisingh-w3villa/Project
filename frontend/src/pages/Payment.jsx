@@ -8,6 +8,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import axios from "../api/axios";
+import Layout from "../components/Layout";
 import "../styles/payment.css";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
@@ -58,7 +59,8 @@ export default function Payment() {
   }, []);
 
   return (
-    <div className="payment-container">
+    <Layout showBackButton backLink="/home">
+      <div className="payment-container">
       <h1>Pricing Plans</h1>
 
       {userPlan && (
@@ -111,7 +113,8 @@ export default function Payment() {
           <PaymentForm plan={selectedPlan} onSuccess={() => window.location.reload()} />
         </Elements>
       )}
-    </div>
+      </div>
+    </Layout>
   );
 }
 

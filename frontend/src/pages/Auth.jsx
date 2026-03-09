@@ -1,5 +1,3 @@
-//Auth.jsx
-
 import { useState } from "react";
 import API from "../api/axios";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +5,8 @@ import "./Auth.css";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [showAdminSecret, setShowAdminSecret] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", password: "", adminSecret: "" });
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -20,11 +19,41 @@ export default function Auth() {
       });
 
       localStorage.setItem("token", res.data.token);
-      navigate("/home");
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      if (res.data.user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/home");
+      }
     } else {
-      await API.post("/auth/signup", form);
-      alert("Signup successful! Please login.");
-      setIsLogin(true);
+      try {
+        const signupData = {
+          name: form.name,
+          email: form.email,
+          password: form.password,
+        };
+        
+        if (form.adminSecret) {
+          signupData.adminSecret = form.adminSecret;
+        }
+        
+        const res = await API.post("/auth/signup", signupData);
+        
+        if (res.data.role === "admin") {
+          alert("Admin signup successful! Please login.");
+        } else {
+          alert("Signup successful! Please login.");
+        }
+        setIsLogin(true);
+      } catch (err) {
+        if (err.response?.status === 409) {
+          alert("An account with this email already exists. Please login instead.");
+          setIsLogin(true);
+        } else {
+          alert(err.response?.data?.message || "Signup failed. Please try again.");
+        }
+      }
     }
   };
 
@@ -33,65 +62,88 @@ export default function Auth() {
   };
 
   return (
-    <div>
-      <h2>{isLogin ? "Login" : "Signup"}</h2>
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h2>{isLogin ? "Welcome Back" : "Create Account"}</h2>
+          <p>{isLogin ? "Sign in to continue" : "Join us today"}</p>
+        </div>
 
-      <form onSubmit={handleSubmit}>
-        {!isLogin && (
+        <form onSubmit={handleSubmit} className="auth-form">
+          {!isLogin && (
+            <input
+              placeholder="Full Name"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              required
+            />
+          )}
+
           <input
-            placeholder="Name"
-            onChange={(e) =>
-              setForm({ ...form, name: e.target.value })
-            }
+            type="email"
+            placeholder="Email address"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            required
           />
-        )}
 
-        <input
-          placeholder="Email"
-          onChange={(e) =>
-            setForm({ ...form, email: e.target.value })
-          }
-        />
+          <input
+            type="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            required
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          onChange={(e) =>
-            setForm({ ...form, password: e.target.value })
-          }
-        />
+          {!isLogin && (
+            <>
+              <div 
+                className="admin-secret-toggle"
+                onClick={() => setShowAdminSecret(!showAdminSecret)}
+              >
+                {showAdminSecret ? "▼ Hide Admin Key" : "► Have an Admin Key?"}
+              </div>
+              
+              {showAdminSecret && (
+                <input
+                  type="password"
+                  placeholder="Admin Secret Key (optional)"
+                  value={form.adminSecret}
+                  onChange={(e) => setForm({ ...form, adminSecret: e.target.value })}
+                />
+              )}
+            </>
+          )}
 
-        <button type="submit">
-          {isLogin ? "Login" : "Signup"}
-        </button>
-      </form>
+          <button type="submit" className="btn-submit">
+            {isLogin ? "Sign In" : "Create Account"}
+          </button>
+        </form>
 
-      <hr />
+        <div className="auth-divider">
+          <span>or</span>
+        </div>
 
-      <button onClick={() => socialLogin("google")}>
-        Continue with Google
-      </button>
+        <div className="social-buttons">
+          <button onClick={() => socialLogin("google")} className="btn-social">
+            Continue with Google
+          </button>
+          <button onClick={() => socialLogin("facebook")} className="btn-social">
+            Continue with Facebook
+          </button>
+          <button onClick={() => socialLogin("microsoft")} className="btn-social">
+            Continue with Microsoft
+          </button>
+        </div>
 
-      <button onClick={() => socialLogin("facebook")}>
-        Continue with Facebook
-      </button>
-
-      <button onClick={() => socialLogin("microsoft")}>
-        Continue with Microsoft
-      </button>
-
-      <p>
-        {isLogin
-          ? "Don't have an account?"
-          : "Already have an account?"}
-
-        <span
-          style={{ cursor: "pointer", color: "blue" }}
-          onClick={() => setIsLogin(!isLogin)}
-        >
-          {isLogin ? " Signup" : " Login"}
-        </span>
-      </p>
+        <p className="auth-toggle">
+          {isLogin ? "Don't have an account?" : "Already have an account?"}
+          <span onClick={() => setIsLogin(!isLogin)}>
+            {isLogin ? "Sign up" : "Sign in"}
+          </span>
+        </p>
+      </div>
     </div>
   );
 }
+

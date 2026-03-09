@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import API from "../api/axios";
+import Layout from "../components/Layout";
 import "./profile.css";
 
 export default function Profile() {
@@ -249,11 +250,12 @@ export default function Profile() {
     }
   };
 
-  if (loading) return <div className="loading-state">Loading...</div>;
-  if (!profile) return <div className="error-state">Profile not found</div>;
+  if (loading) return <Layout><div className="loading-state">Loading...</div></Layout>;
+  if (!profile) return <Layout><div className="error-state">Profile not found</div></Layout>;
 
   return (
-    <div className="profile-container">
+    <Layout showBackButton backLink="/home">
+      <div className="profile-container">
       <div className="profile-header">
         <h1 className="profile-title">Profile</h1>
         <p className="profile-subtitle">Manage your account information and preferences</p>
@@ -476,5 +478,6 @@ export default function Profile() {
         )}
       </div>
     </div>
+    </Layout>
   );
 }

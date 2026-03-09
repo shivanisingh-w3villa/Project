@@ -4,7 +4,8 @@ import express from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
-import { signup, login } from "../controllers/authController.js";
+import { signup, login, me } from "../controllers/authController.js";
+import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -39,7 +40,7 @@ const socialAuthHandler = async (req, res) => {
   }
 
   const token = jwt.sign(
-    { id: user._id },
+    { id: user._id, role: user.role },
     process.env.JWT_SECRET,
     { expiresIn: "1d" }
   );
@@ -79,5 +80,8 @@ router.get("/microsoft/callback",
   passport.authenticate("microsoft", { session: false }),
   socialAuthHandler
 );
+
+// extra helper route for client
+router.get("/me", authMiddleware, me);
 
 export default router;

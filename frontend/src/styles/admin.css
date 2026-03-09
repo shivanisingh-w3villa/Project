@@ -1,21 +1,56 @@
-/* filepath: frontend/src/styles/admin.css */
+/* =====================================================
+ADMIN PAGE - PROFESSIONAL STYLES
+===================================================== */
+
 .admin-container {
   max-width: 1200px;
-  margin: 2rem auto;
-  padding: 2rem;
+  margin: 0 auto;
+  padding: var(--spacing-xl) 0;
 }
 
 .admin-container h1 {
   text-align: center;
-  margin-bottom: 2rem;
-  color: #333;
+  margin-bottom: var(--spacing-xl);
+  color: var(--text-primary);
+  font-size: var(--font-size-2xl);
 }
 
+/* Controls */
+.controls {
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.controls input,
+.controls select {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background: var(--white);
+  font-size: var(--font-size-sm);
+}
+
+.controls input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.controls input:focus,
+.controls select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+/* Users Table */
 .users-table {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: var(--white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow);
   overflow-x: auto;
+  border: 1px solid var(--border-color);
 }
 
 .users-table table {
@@ -25,75 +60,96 @@
 
 .users-table th,
 .users-table td {
-  padding: 12px;
+  padding: var(--spacing-md);
   text-align: left;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .users-table th {
-  background: #f8f9fa;
+  background: var(--gray-50);
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .users-table tr:hover {
-  background: #f8f9fa;
+  background: var(--gray-50);
 }
 
+.users-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Status Badge */
 .status {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: bold;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
   text-transform: uppercase;
 }
 
 .status.active {
-  background: #d1fae5;
+  background: var(--success-light);
   color: #065f46;
 }
 
 .status.expired {
-  background: #fee2e2;
-  color: #dc2626;
+  background: var(--danger-light);
+  color: var(--danger);
 }
 
+/* Edit Button */
 .edit-button {
-  background: #2563eb;
+  background: var(--primary);
   color: white;
   border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius);
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  transition: background var(--transition-fast);
 }
 
 .edit-button:hover {
-  background: #1d4ed8;
+  background: var(--primary-hover);
 }
 
+/* Plan Editor */
 .plan-editor {
   display: flex;
-  gap: 8px;
+  gap: var(--spacing-xs);
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .plan-editor select,
 .plan-editor input {
-  padding: 4px 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 12px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+}
+
+.plan-editor select:focus,
+.plan-editor input:focus {
+  outline: none;
+  border-color: var(--primary);
 }
 
 .save-button {
-  background: #10b981;
+  background: var(--success);
   color: white;
   border: none;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius);
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  transition: background var(--transition-fast);
 }
 
 .save-button:hover {
@@ -101,26 +157,76 @@
 }
 
 .cancel-button {
-  background: #6b7280;
+  background: var(--gray-400);
   color: white;
   border: none;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius);
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  transition: background var(--transition-fast);
 }
 
 .cancel-button:hover {
-  background: #4b5563;
+  background: var(--gray-500);
 }
 
+/* Pagination */
+.pagination {
+  margin-top: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+
+.pagination button {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 500;
+  transition: background var(--transition-fast);
+}
+
+.pagination button:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.pagination button:disabled {
+  background: var(--gray-300);
+  cursor: not-allowed;
+}
+
+.pagination span {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .admin-container {
-    padding: 1rem;
+    padding: var(--spacing-md) 0;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .controls input {
+    min-width: 100%;
   }
 
   .users-table {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
+  }
+
+  .users-table th,
+  .users-table td {
+    padding: var(--spacing-sm);
   }
 
   .plan-editor {
@@ -128,3 +234,4 @@
     align-items: stretch;
   }
 }
+
