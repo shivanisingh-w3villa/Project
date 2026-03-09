@@ -23,8 +23,22 @@ const userSchema = new mongoose.Schema(
 
     providerId: String,
 
-    /* ===== PROFILE EXTENSIONS ===== */
+    // OAuth tokens (optional, for future API calls)
+    OAuthTokens: {
+      google: {
+        accessToken: String,
+        refreshToken: String,
+      },
+      facebook: {
+        accessToken: String,
+      },
+      microsoft: {
+        accessToken: String,
+        refreshToken: String,
+      },
+    },
 
+    // Profile image from OAuth
     profileImage: {
       type: String,
     },

@@ -15,6 +15,7 @@ export default function OAuthSuccess() {
 
       if (token) {
         localStorage.setItem("token", token);
+        
         // call backend to get user profile (role etc.)
         try {
           const res = await fetch("http://localhost:5000/auth/me", {
@@ -22,7 +23,15 @@ export default function OAuthSuccess() {
           });
           if (res.ok) {
             const body = await res.json();
-            localStorage.setItem("user", JSON.stringify(body.user));
+            
+            // Add profile image to user object if available from OAuth
+            const userData = {
+              ...body.user,
+              profileImage: body.user.profileImage || null,
+            };
+            
+            localStorage.setItem("user", JSON.stringify(userData));
+            
             if (body.user.role === "admin") {
               navigate("/admin");
               return;
@@ -37,5 +46,11 @@ export default function OAuthSuccess() {
     handleToken();
   }, []);
 
-  return <Layout><div className="oauth-loading"><h2>Logging you in...</h2></div></Layout>;
+  return (
+    <Layout>
+      <div className="oauth-loading">
+        <h2>Logging you in...</h2>
+      </div>
+    </Layout>
+  );
 }

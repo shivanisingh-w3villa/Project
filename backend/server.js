@@ -4,6 +4,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import passport from "passport";
+import session from "express-session";
 import cron from "node-cron";
 
 import connectDB from "./config/db.js";
@@ -22,7 +23,16 @@ const app = express();   // ✅ APP MUST BE CREATED BEFORE USE
 app.use(cors());
 
 app.use(express.json());
+
+// Session configuration for Passport OAuth
+app.use(session({
+  secret: process.env.JWT_SECRET || "session_secret",
+  resave: false,
+  saveUninitialized: false,
+}));
+
 app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/auth", authRoutes);
 app.use("/profile", profileRoutes);  // ✅ AFTER app is declared
