@@ -24,7 +24,7 @@ export const signup = async (req, res) => {
 
     // normal signups create a regular user; providing the correct adminSecret
     // during signup will create an admin account.
-    await User.create({
+    const user = await User.create({
       name,
       email,
       password: hashedPassword,
@@ -32,11 +32,7 @@ export const signup = async (req, res) => {
       role: role,
     });
 
-    const message = role === "admin" 
-      ? "Admin signup successful" 
-      : "Signup successful";
-
-    res.status(200).json({ message, role });
+    res.status(200).json({ message: "Signup successful! You can now login.", role });
   } catch {
     res.status(500).json({ message: "Server error" });
   }

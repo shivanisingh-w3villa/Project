@@ -40,11 +40,7 @@ export default function Auth() {
         
         const res = await API.post("/auth/signup", signupData);
         
-        if (res.data.role === "admin") {
-          alert("Admin signup successful! Please login.");
-        } else {
-          alert("Signup successful! Please login.");
-        }
+        alert(res.data.message);
         setIsLogin(true);
       } catch (err) {
         if (err.response?.status === 409) {

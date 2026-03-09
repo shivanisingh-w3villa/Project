@@ -65,6 +65,16 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+
+    /* ===== EMAIL VERIFICATION ===== */
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    verificationToken: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
