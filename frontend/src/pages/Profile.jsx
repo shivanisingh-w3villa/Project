@@ -307,21 +307,50 @@ export default function Profile() {
 
           {/* Plan Section */}
           <div className="plan-section">
-            <div className="profile-card">
+            <div className="profile-card plan-card-enhanced">
               <div className="section-header">
-                <h3>Subscription Plan</h3>
+                <h3>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                    <path d="M2 17l10 5 10-5"></path>
+                    <path d="M2 12l10 5 10-5"></path>
+                  </svg>
+                  Subscription Plan
+                </h3>
               </div>
               
               {userPlan && (
                 <>
                   <div className="plan-info">
-                    <div>
-                      <span className={`plan-badge ${userPlan.plan === 'free' ? 'active' : ''}`}>
+                    <div className="plan-badge-container">
+                      <span className={`plan-badge ${userPlan.plan === 'free' ? 'active' : ''} ${userPlan.plan}`}>
+                        {userPlan.plan === 'free' && (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                          </svg>
+                        )}
+                        {userPlan.plan === 'silver' && (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                          </svg>
+                        )}
+                        {userPlan.plan === 'gold' && (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                          </svg>
+                        )}
                         {userPlan.plan?.toUpperCase()}
                       </span>
+                      {userPlan.status === 'active' && (
+                        <span className="plan-status active-status">Active</span>
+                      )}
                     </div>
                     {userPlan.expiration && (
                       <div className="plan-expiration">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
                         Expires: <strong>{new Date(userPlan.expiration).toLocaleString()}</strong>
                       </div>
                     )}
@@ -332,7 +361,14 @@ export default function Profile() {
                       className="upgrade-button"
                       onClick={() => (window.location.href = "/payment")}
                     >
-                      {userPlan.plan === 'free' ? 'Upgrade Plan' : 'Change Plan'}
+                      {userPlan.plan === 'free' ? (
+                        <>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                          </svg>
+                          Upgrade Plan
+                        </>
+                      ) : 'Change Plan'}
                     </button>
                   </div>
                 </>
@@ -340,7 +376,12 @@ export default function Profile() {
               
               {!userPlan && (
                 <div className="plan-actions">
-                  <span className="plan-badge active">FREE</span>
+                  <span className="plan-badge active free">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    FREE
+                  </span>
                   <button 
                     className="upgrade-button"
                     onClick={() => (window.location.href = "/payment")}

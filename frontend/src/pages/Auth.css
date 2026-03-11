@@ -186,11 +186,25 @@ AUTH PAGE - PROFESSIONAL STYLES
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color var(--transition-fast);
+  transition: all var(--transition-fast);
+  border-radius: 50%;
 }
 
 .password-toggle-btn:hover {
   color: var(--text-primary);
+  background: var(--gray-100);
+}
+
+.password-toggle-btn:active {
+  transform: scale(0.95);
+}
+
+.password-toggle-btn svg {
+  transition: transform 0.2s ease;
+}
+
+.password-toggle-btn:hover svg {
+  transform: scale(1.1);
 }
 
 /* OAuth Loading */

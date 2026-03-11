@@ -403,9 +403,33 @@ PROFILE PAGE - ENHANCED STYLES
   color: #059437;
 }
 
-.plan-badge.expired {
-  background: var(--danger-light);
-  color: var(--danger);
+.plan-badge.silver {
+  background: linear-gradient(135deg, #e8e8e8 0%, #c0c0c0 100%);
+  color: #5a5a5a;
+}
+
+.plan-badge.gold {
+  background: linear-gradient(135deg, #ffd700 0%, #ffb700 100%);
+  color: #5a4500;
+}
+
+.plan-badge.free {
+  background: #d1fae5;
+  color: #059437;
+}
+
+.plan-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 8px;
+}
+
+.active-status {
+  background: #d1fae5;
+  color: #059437;
 }
 
 .plan-actions {
@@ -415,9 +439,25 @@ PROFILE PAGE - ENHANCED STYLES
   flex-wrap: wrap;
 }
 
+.plan-card-enhanced {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+}
+
+.plan-card-enhanced .section-header svg {
+  color: #059437;
+}
+
 .plan-expiration {
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-sm);
+}
+
+.plan-expiration svg {
+  color: var(--text-muted);
 }
 
 .plan-expiration strong {
@@ -448,6 +488,10 @@ PROFILE PAGE - ENHANCED STYLES
 .upgrade-button:focus {
   outline: none;
   box-shadow: var(--shadow-md), 0 0 0 3px var(--primary-light);
+}
+
+.upgrade-button svg {
+  flex-shrink: 0;
 }
 
 /* Address Section */

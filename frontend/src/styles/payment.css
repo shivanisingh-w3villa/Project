@@ -74,6 +74,8 @@ PAYMENT PAGE - PROFESSIONAL STYLES
   text-align: center;
   transition: all var(--transition-base);
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
 .plan-card:hover {
@@ -89,6 +91,48 @@ PAYMENT PAGE - PROFESSIONAL STYLES
 .plan-card.current {
   border-color: var(--success);
   background: var(--success-light);
+}
+
+.plan-card.free .plan-icon {
+  color: #059437;
+}
+
+.plan-card.silver .plan-icon {
+  color: #9ca3af;
+}
+
+.plan-card.gold .plan-icon {
+  color: #f59e0b;
+}
+
+.plan-card.free {
+  border-color: #059437;
+}
+
+.plan-card.free.current {
+  box-shadow: 0 0 20px rgba(5, 148, 55, 0.3);
+}
+
+.plan-card.silver {
+  border-color: #9ca3af;
+}
+
+.plan-card.silver.current {
+  box-shadow: 0 0 20px rgba(156, 163, 175, 0.3);
+}
+
+.plan-card.gold {
+  border-color: #f59e0b;
+}
+
+.plan-card.gold.current {
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+}
+
+.plan-icon {
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  justify-content: center;
 }
 
 .plan-card h2 {
@@ -120,6 +164,14 @@ PAYMENT PAGE - PROFESSIONAL STYLES
   padding: var(--spacing-sm) 0;
   border-bottom: 1px solid var(--border-color);
   color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.plan-card li svg {
+  flex-shrink: 0;
+  color: var(--success);
 }
 
 .plan-card li:last-child {
