@@ -17,17 +17,40 @@ PAYMENT PAGE - PROFESSIONAL STYLES
 
 /* Current Plan */
 .current-plan {
-  background: var(--primary-light);
-  border: 1px solid var(--primary);
+  background: #d1fae5;
+  border: 2px solid #059437;
   border-radius: var(--border-radius);
   padding: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
   text-align: center;
 }
 
-.current-plan h3 {
-  margin: 0 0 var(--spacing-sm) 0;
-  color: var(--primary);
+.current-plan-badge {
+  display: inline-block;
+  background: #059437;
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  font-size: var(--font-size-lg);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  font-size: var(--font-size-sm);
+}
+
+.status-badge.active {
+  background: #d1fae5;
+  color: #059437;
+}
+
+.status-badge.expired {
+  background: var(--danger-light);
+  color: var(--danger);
 }
 
 .current-plan p {

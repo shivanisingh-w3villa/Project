@@ -398,9 +398,21 @@ PROFILE PAGE - ENHANCED STYLES
   font-size: var(--font-size-lg);
 }
 
+.plan-badge.active {
+  background: #d1fae5;
+  color: #059437;
+}
+
 .plan-badge.expired {
   background: var(--danger-light);
   color: var(--danger);
+}
+
+.plan-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
 }
 
 .plan-expiration {

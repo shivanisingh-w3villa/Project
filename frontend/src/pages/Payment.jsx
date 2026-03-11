@@ -83,8 +83,10 @@ export default function Payment() {
 
         {userPlan && (
           <div className="current-plan">
-            <h3>Current Plan: {userPlan.plan.charAt(0).toUpperCase() + userPlan.plan.slice(1)}</h3>
-            <p>Status: {userPlan.status}</p>
+            <span className="current-plan-badge">
+              Current Plan: {userPlan.plan.charAt(0).toUpperCase() + userPlan.plan.slice(1)}
+            </span>
+            <p>Status: <span className={`status-badge ${userPlan.status}`}>{userPlan.status}</span></p>
             {userPlan.expiration && (
               <p>Expires: {new Date(userPlan.expiration).toLocaleString()}</p>
             )}

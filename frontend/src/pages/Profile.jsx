@@ -316,7 +316,7 @@ export default function Profile() {
                 <>
                   <div className="plan-info">
                     <div>
-                      <span className="plan-badge">
+                      <span className={`plan-badge ${userPlan.plan === 'free' ? 'active' : ''}`}>
                         {userPlan.plan?.toUpperCase()}
                       </span>
                     </div>
@@ -327,22 +327,27 @@ export default function Profile() {
                     )}
                   </div>
                   
-                  <button 
-                    className="upgrade-button"
-                    onClick={() => (window.location.href = "/payment")}
-                  >
-                    Manage Plan
-                  </button>
+                  <div className="plan-actions">
+                    <button 
+                      className="upgrade-button"
+                      onClick={() => (window.location.href = "/payment")}
+                    >
+                      {userPlan.plan === 'free' ? 'Upgrade Plan' : 'Change Plan'}
+                    </button>
+                  </div>
                 </>
               )}
               
               {!userPlan && (
-                <button 
-                  className="upgrade-button"
-                  onClick={() => (window.location.href = "/payment")}
-                >
-                  View Plans
-                </button>
+                <div className="plan-actions">
+                  <span className="plan-badge active">FREE</span>
+                  <button 
+                    className="upgrade-button"
+                    onClick={() => (window.location.href = "/payment")}
+                  >
+                    View Plans
+                  </button>
+                </div>
               )}
             </div>
           </div>
