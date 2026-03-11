@@ -20,12 +20,19 @@ connectDB();
 
 const app = express();   // ✅ APP MUST BE CREATED BEFORE USE
 
+// Get frontend URL from environment or use localhost for development
+const getCorsOrigin = () => {
+  const frontendUrl = process.env.FRONTEND_URL;
+  if (frontendUrl) {
+    return [frontendUrl, "http://localhost:5173"];
+  }
+  // Default to localhost for development
+  return ["http://localhost:5173"];
+};
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://project-git-main-shivanisingh-w3villas-projects.vercel.app"
-    ],
+    origin: getCorsOrigin(),
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true

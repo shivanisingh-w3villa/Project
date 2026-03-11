@@ -18,7 +18,9 @@ export const sendVerificationEmail = async (email, verificationToken) => {
   try {
     const transporter = createTransporter();
     
-    const verificationUrl = `http://localhost:5000/auth/verify/${verificationToken}`;
+    // Get frontend URL from environment or use localhost for development
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const verificationUrl = `${frontendUrl}/verify/${verificationToken}`;
 
     const mailOptions = {
       from: process.env.SMTP_FROM || process.env.SMTP_USER,
