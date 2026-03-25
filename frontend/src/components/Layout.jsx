@@ -80,4 +80,3 @@ export default function Layout({ children, showBackButton = false, backLink = "/
     </div>
   );
 }
-
