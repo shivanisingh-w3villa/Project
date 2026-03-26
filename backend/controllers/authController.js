@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY || "admin";
 
 export const signup = async (req, res) => {
+  console.log('Signup attempt:', req.body.email);
   try {
     const { name, email, password, adminSecret } = req.body;
 
@@ -32,6 +33,7 @@ export const signup = async (req, res) => {
       role: role,
     });
 
+    console.log('User created successfully:', user._id);
     res.status(200).json({ message: "Signup successful! You can now login.", role });
   } catch {
     res.status(500).json({ message: "Server error" });
@@ -52,6 +54,8 @@ export const me = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    console.log('Login attempt for email:', email);
 
     const user = await User.findOne({ email });
     if (!user)

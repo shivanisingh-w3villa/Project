@@ -13,7 +13,7 @@ const getBaseURL = () => {
 
 const API = axios.create({
   baseURL: getBaseURL(),
-  timeout: 30000, // 30 second timeout for requests
+  timeout: 60000, // 60 second timeout for Render cold starts
 });
 
 // Log the base URL for debugging
@@ -44,7 +44,7 @@ API.interceptors.response.use(
         // Retry the request once after a short delay (helps with cold start)
         return new Promise((resolve) => {
           setTimeout(() => {
-            const retryConfig = { ...error.config };
+            const retryConfig = { ...error.config, timeout: 60000 };
             retryConfig.headers = { ...retryConfig.headers };
             API(retryConfig)
               .then(resolve)
@@ -55,7 +55,7 @@ API.interceptors.response.use(
                 localStorage.removeItem("user");
                 window.location.href = "/";
               });
-          }, 1000); // Wait 1 second before retry (gives server time to wake up)
+          }, 3000); // Wait 3 seconds before retry for cold starts
         });
       }
     }
@@ -70,7 +70,7 @@ API.interceptors.response.use(
         // Wait and retry once
         return new Promise((resolve) => {
           setTimeout(() => {
-            const retryConfig = { ...error.config };
+            const retryConfig = { ...error.config, timeout: 60000 };
             retryConfig.headers = { ...retryConfig.headers };
             API(retryConfig)
               .then(resolve)
@@ -80,7 +80,7 @@ API.interceptors.response.use(
                 localStorage.removeItem("user");
                 window.location.href = "/";
               });
-          }, 2000);
+          }, 5000); // Wait 5 seconds for network recovery
         });
       }
     }
