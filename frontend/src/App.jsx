@@ -14,12 +14,12 @@ import "./App.css";
 
 function App() {
   const hasToken = !!localStorage.getItem("token");
-  
+
   // Keep-alive mechanism to prevent serverless cold starts
   // This pings the backend periodically to keep the function warm
   useEffect(() => {
     if (!hasToken) return;
-    
+
     const keepAliveInterval = setInterval(() => {
       // Ping health endpoint to keep serverless function warm
       API.get("/health", { timeout: 5000 })
@@ -30,7 +30,7 @@ function App() {
           console.log("Keep-alive ping failed:", err.message);
         });
     }, 45000); // Ping every 45 seconds (less than typical 55s timeout)
-    
+
     return () => {
       clearInterval(keepAliveInterval);
     };
@@ -39,7 +39,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-
         {/* Login / Signup */}
         <Route path="/" element={<Auth />} />
 
@@ -85,7 +84,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
       </Routes>
     </BrowserRouter>
   );

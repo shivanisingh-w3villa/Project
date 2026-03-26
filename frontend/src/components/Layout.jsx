@@ -1,9 +1,13 @@
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
-export default function Layout({ children, showBackButton = false, backLink = "/home" }) {
+export default function Layout({
+  children,
+  showBackButton = false,
+  backLink = "/home",
+}) {
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const userName = user.name || "User";
 
@@ -25,27 +29,27 @@ export default function Layout({ children, showBackButton = false, backLink = "/
         </div>
 
         <div className="navbar-nav">
-          <Link 
-            to="/home" 
+          <Link
+            to="/home"
             className={`nav-link ${isActive("/home") ? "active" : ""}`}
           >
             Home
           </Link>
-          <Link 
-            to="/profile" 
+          <Link
+            to="/profile"
             className={`nav-link ${isActive("/profile") ? "active" : ""}`}
           >
             Profile
           </Link>
-          <Link 
-            to="/payment" 
+          <Link
+            to="/payment"
             className={`nav-link ${isActive("/payment") ? "active" : ""}`}
           >
             Payment
           </Link>
           {user.role === "admin" && (
-            <Link 
-              to="/admin" 
+            <Link
+              to="/admin"
               className={`nav-link ${isActive("/admin") ? "active" : ""}`}
             >
               Admin
@@ -69,9 +73,7 @@ export default function Layout({ children, showBackButton = false, backLink = "/
             </button>
           </div>
         )}
-        <div className="main-content">
-          {children}
-        </div>
+        <div className="main-content">{children}</div>
       </main>
 
       <footer className="footer">

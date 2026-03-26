@@ -207,9 +207,7 @@ export default function Profile() {
       ["Address", profile.address || "Not set"],
     ];
 
-    const csv =
-      "Field,Value\n" +
-      rows.map((r) => `${r[0]},${r[1]}`).join("\n");
+    const csv = "Field,Value\n" + rows.map((r) => `${r[0]},${r[1]}`).join("\n");
 
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
@@ -252,9 +250,9 @@ export default function Profile() {
             <div className="profile-card">
               <div className="profile-image-container">
                 {profile.profileImage ? (
-                  <img 
-                    src={profile.profileImage} 
-                    alt="profile" 
+                  <img
+                    src={profile.profileImage}
+                    alt="profile"
                     className="profile-image"
                   />
                 ) : (
@@ -263,7 +261,7 @@ export default function Profile() {
                   </div>
                 )}
               </div>
-              
+
               <div className="upload-section">
                 <label className="upload-label">Upload New Photo</label>
                 <input
@@ -272,8 +270,8 @@ export default function Profile() {
                   onChange={(e) => setImage(e.target.files[0])}
                   accept="image/*"
                 />
-                <button 
-                  className="upload-button" 
+                <button
+                  className="upload-button"
                   onClick={uploadImage}
                   disabled={!image}
                 >
@@ -289,17 +287,17 @@ export default function Profile() {
               <div className="section-header">
                 <h3>Account Details</h3>
               </div>
-              
+
               <div className="detail-group">
                 <span className="detail-label">Name</span>
                 <span className="detail-value">{profile.name}</span>
               </div>
-              
+
               <div className="detail-group">
                 <span className="detail-label">Email</span>
                 <span className="detail-value">{profile.email}</span>
               </div>
-              
+
               {profile.phone && (
                 <div className="detail-group">
                   <span className="detail-label">Phone</span>
@@ -315,19 +313,19 @@ export default function Profile() {
               <div className="section-header">
                 <h3>Download Your Data</h3>
               </div>
-              
+
               <p className="download-description">
                 Export your profile data in your preferred format
               </p>
-              
+
               <div className="download-buttons">
-                <button 
+                <button
                   className="download-button json"
                   onClick={downloadProfileJSON}
                 >
                   Download JSON
                 </button>
-                <button 
+                <button
                   className="download-button csv"
                   onClick={downloadProfileCSV}
                 >
@@ -342,7 +340,17 @@ export default function Profile() {
             <div className="profile-card plan-card-enhanced">
               <div className="section-header">
                 <h3>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
                     <path d="M2 17l10 5 10-5"></path>
                     <path d="M2 12l10 5 10-5"></path>
@@ -350,79 +358,161 @@ export default function Profile() {
                   Subscription Plan
                 </h3>
               </div>
-              
+
               {userPlan && (
                 <>
                   <div className="plan-info">
                     <div className="plan-badge-container">
-                      <span className={`plan-badge ${userPlan.plan === 'free' ? 'active' : ''} ${userPlan.plan}`}>
-                        {userPlan.plan === 'free' && (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <span
+                        className={`plan-badge ${userPlan.plan === "free" ? "active" : ""} ${userPlan.plan}`}
+                      >
+                        {userPlan.plan === "free" && (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                           </svg>
                         )}
-                        {userPlan.plan === 'silver' && (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        {userPlan.plan === "silver" && (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                           </svg>
                         )}
-                        {userPlan.plan === 'gold' && (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        {userPlan.plan === "gold" && (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                           </svg>
                         )}
                         {userPlan.plan?.toUpperCase()}
                       </span>
-                      {userPlan.status === 'active' && (
-                        <span className="plan-status active-status">Active</span>
+                      {userPlan.status === "active" && (
+                        <span className="plan-status active-status">
+                          Active
+                        </span>
                       )}
                     </div>
                     {userPlan.expiration && (
                       <div className="plan-expiration">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
                           <circle cx="12" cy="12" r="10"></circle>
                           <polyline points="12 6 12 12 16 14"></polyline>
                         </svg>
-                        Expires: <strong>{new Date(userPlan.expiration).toLocaleString()}</strong>
+                        Expires:{" "}
+                        <strong>
+                          {new Date(userPlan.expiration).toLocaleString()}
+                        </strong>
                       </div>
                     )}
                     {remainingTime > 0 && userPlan.plan !== "free" && (
                       <div className="plan-timer">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
                           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                         </svg>
-                        Time Remaining: <strong className="timer-countdown">{formatTime(remainingTime)}</strong>
+                        Time Remaining:{" "}
+                        <strong className="timer-countdown">
+                          {formatTime(remainingTime)}
+                        </strong>
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="plan-actions">
-                    <button 
+                    <button
                       className="upgrade-button"
                       onClick={() => navigate("/payment")}
                     >
-                      {userPlan.plan === 'free' ? (
+                      {userPlan.plan === "free" ? (
                         <>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                           </svg>
                           Upgrade Plan
                         </>
-                      ) : 'Change Plan'}
+                      ) : (
+                        "Change Plan"
+                      )}
                     </button>
                   </div>
                 </>
               )}
-              
+
               {!userPlan && (
                 <div className="plan-actions">
                   <span className="plan-badge active free">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                     </svg>
                     FREE
                   </span>
-                  <button 
+                  <button
                     className="upgrade-button"
                     onClick={() => navigate("/payment")}
                   >
@@ -439,7 +529,7 @@ export default function Profile() {
               <div className="section-header">
                 <h3>Address</h3>
               </div>
-              
+
               {!editingAddress ? (
                 <div className="address-display">
                   <div className="address-value">
@@ -447,7 +537,7 @@ export default function Profile() {
                       {profile.address || "No address set"}
                     </p>
                   </div>
-                  <button 
+                  <button
                     className="edit-address-button"
                     onClick={() => setEditingAddress(true)}
                   >
@@ -457,9 +547,11 @@ export default function Profile() {
               ) : (
                 <div className="address-edit-form">
                   <div className="address-alert info">
-                    <p>Start typing your address and select from the suggestions</p>
+                    <p>
+                      Start typing your address and select from the suggestions
+                    </p>
                   </div>
-                  
+
                   <input
                     type="text"
                     className="address-input"
@@ -470,12 +562,12 @@ export default function Profile() {
                     }}
                     placeholder="Enter your address"
                   />
-                  
+
                   {suggestions.length > 0 && (
                     <ul className="suggestions-list">
                       {suggestions.map((s, i) => (
-                        <li 
-                          key={i} 
+                        <li
+                          key={i}
                           className="suggestion-item"
                           onClick={() => selectAddress(s)}
                         >
@@ -484,15 +576,15 @@ export default function Profile() {
                       ))}
                     </ul>
                   )}
-                  
+
                   <div className="address-buttons">
-                    <button 
+                    <button
                       className="save-address-button"
                       onClick={updateAddress}
                     >
                       Save Address
                     </button>
-                    <button 
+                    <button
                       className="cancel-address-button"
                       onClick={() => {
                         setEditingAddress(false);
@@ -518,20 +610,27 @@ export default function Profile() {
                     <strong>{profile.address}</strong>
                   </p>
                 </div>
-                
+
                 <div className="map-container">
                   <iframe
                     title="map"
                     loading="lazy"
                     src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&q=${encodeURIComponent(
-                      profile.address
+                      profile.address,
                     )}`}
                   ></iframe>
                 </div>
-                
+
                 <div className="map-footer">
                   <small>
-                    Powered by <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">Google Maps</a>
+                    Powered by{" "}
+                    <a
+                      href="https://www.google.com/maps"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Google Maps
+                    </a>
                   </small>
                 </div>
               </div>
@@ -542,4 +641,3 @@ export default function Profile() {
     </Layout>
   );
 }
-

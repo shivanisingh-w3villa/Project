@@ -214,21 +214,20 @@ APP LAYOUT STYLES
   .navbar {
     padding: 0 var(--spacing-md);
   }
-  
+
   .navbar-brand span {
     display: none;
   }
-  
+
   .nav-link {
     padding: var(--spacing-sm);
   }
-  
+
   .user-name {
     display: none;
   }
-  
+
   .main-content {
     padding: 0 var(--spacing-md);
   }
 }
-

@@ -25,6 +25,9 @@ router.get("/users", async (req, res) => {
     if (status) filter.planStatus = status;
     if (role) filter.role = role;
 
+    // Exclude deleted users
+    filter.isDeleted = false;
+
     const skip = (Number(page) - 1) * Number(limit);
 
     const [users, total] = await Promise.all([
@@ -102,6 +105,34 @@ router.put("/user/:userId/role", async (req, res) => {
     );
     if (!updated) return res.status(404).json({ error: "User not found" });
     res.json(updated);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// DELETE user profile (admin only) - cannot delete admins
+router.delete("/user/:userId", async (req, res) => {
+  try {
+    const targetUser = await User.findById(req.params.userId);
+    if (!targetUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    if (targetUser.role === "admin") {
+      return res.status(400).json({ error: "Cannot delete admin profiles" });
+    }
+    if (targetUser.isDeleted) {
+      return res.status(400).json({ error: "User already deleted" });
+    }
+
+    // Soft delete
+    targetUser.isDeleted = true;
+    targetUser.OAuthTokens = {};
+    targetUser.profileImage = null;
+    targetUser.plan = "free";
+    targetUser.planExpiration = null;
+    await targetUser.save();
+
+    res.json({ message: "User deleted successfully" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

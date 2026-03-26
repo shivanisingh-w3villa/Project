@@ -89,8 +89,15 @@ const userSchema = new mongoose.Schema(
     verificationToken: {
       type: String,
     },
+
+    // Soft delete flag
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
+
 );
 
 const User = mongoose.model("User", userSchema);

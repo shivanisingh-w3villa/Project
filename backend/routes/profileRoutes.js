@@ -25,4 +25,6 @@ router.post(
 
 router.get("/download", authMiddleware, downloadProfile);
 
+
+
 export default router;

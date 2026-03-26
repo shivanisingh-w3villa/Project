@@ -28,8 +28,8 @@ export default function VerifyEmail() {
       } catch (err) {
         setStatus("error");
         setMessage(
-          err.response?.data?.message || 
-          "Verification failed. The link may be invalid or expired."
+          err.response?.data?.message ||
+            "Verification failed. The link may be invalid or expired.",
         );
       }
     };
@@ -41,15 +41,9 @@ export default function VerifyEmail() {
     <div className="auth-container">
       <div className="auth-card verification-card">
         <div className="verification-icon">
-          {status === "loading" && (
-            <div className="spinner"></div>
-          )}
-          {status === "success" && (
-            <div className="icon-success">✓</div>
-          )}
-          {status === "error" && (
-            <div className="icon-error">✕</div>
-          )}
+          {status === "loading" && <div className="spinner"></div>}
+          {status === "success" && <div className="icon-success">✓</div>}
+          {status === "error" && <div className="icon-error">✕</div>}
         </div>
 
         <h2>
@@ -77,4 +71,3 @@ export default function VerifyEmail() {
     </div>
   );
 }
-

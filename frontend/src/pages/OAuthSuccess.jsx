@@ -20,7 +20,7 @@ export default function OAuthSuccess() {
 
       if (token) {
         localStorage.setItem("token", token);
-        
+
         // call backend to get user profile (role etc.)
         try {
           const apiUrl = getApiUrl();
@@ -29,15 +29,15 @@ export default function OAuthSuccess() {
           });
           if (res.ok) {
             const body = await res.json();
-            
+
             // Add profile image to user object if available from OAuth
             const userData = {
               ...body.user,
               profileImage: body.user.profileImage || null,
             };
-            
+
             localStorage.setItem("user", JSON.stringify(userData));
-            
+
             if (body.user.role === "admin") {
               navigate("/admin");
               return;

@@ -10,10 +10,10 @@ export const loadGoogleMapsAPI = async () => {
     }
 
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-    
+
     if (!apiKey) {
       console.warn(
-        "Google Maps API key not found. Set VITE_GOOGLE_MAPS_API_KEY in your .env file"
+        "Google Maps API key not found. Set VITE_GOOGLE_MAPS_API_KEY in your .env file",
       );
       reject(new Error("Google Maps API key not configured"));
       return;

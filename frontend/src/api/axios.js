@@ -36,7 +36,7 @@ API.interceptors.response.use(
     // Handle 404 errors - could be serverless cold start or endpoint not found
     if (error.response?.status === 404) {
       console.error("Endpoint not found (404):", error.config?.url);
-      
+
       // Check if this might be a serverless cold start issue
       // by checking if we have a valid token
       const token = localStorage.getItem("token");
@@ -59,11 +59,14 @@ API.interceptors.response.use(
         });
       }
     }
-    
+
     // Handle network errors
     if (error.code === "ERR_NETWORK" || error.message === "Network Error") {
-      console.error("Network error - Backend may be unreachable:", error.message);
-      
+      console.error(
+        "Network error - Backend may be unreachable:",
+        error.message,
+      );
+
       // Check if we have a token - if so, try to re-establish connection
       const token = localStorage.getItem("token");
       if (token) {
@@ -84,7 +87,7 @@ API.interceptors.response.use(
         });
       }
     }
-    
+
     // Handle 401 Unauthorized - token expired or invalid
     if (error.response?.status === 401) {
       console.error("Unauthorized - clearing auth data");
@@ -95,9 +98,9 @@ API.interceptors.response.use(
         window.location.href = "/";
       }
     }
-    
+
     return Promise.reject(error);
-  }
+  },
 );
 
 export default API;

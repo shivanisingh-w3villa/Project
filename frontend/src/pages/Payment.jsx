@@ -16,7 +16,17 @@ export default function Payment() {
       price: 0,
       duration: "Unlimited",
       icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
         </svg>
       ),
@@ -28,7 +38,17 @@ export default function Payment() {
       price: 0,
       duration: "1 Hour",
       icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
         </svg>
       ),
@@ -40,7 +60,17 @@ export default function Payment() {
       price: 0,
       duration: "6 Hours",
       icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
         </svg>
       ),
@@ -77,7 +107,10 @@ export default function Payment() {
       });
 
       if (response.data.success) {
-        setMessage({ type: "success", text: `${plan.name} plan activated successfully!` });
+        setMessage({
+          type: "success",
+          text: `${plan.name} plan activated successfully!`,
+        });
         setUserPlan({
           plan: plan.id,
           status: "active",
@@ -85,7 +118,10 @@ export default function Payment() {
         });
       }
     } catch (error) {
-      setMessage({ type: "error", text: error.response?.data?.error || "Failed to activate plan" });
+      setMessage({
+        type: "error",
+        text: error.response?.data?.error || "Failed to activate plan",
+      });
     }
 
     setLoading(false);
@@ -99,9 +135,15 @@ export default function Payment() {
         {userPlan && (
           <div className="current-plan">
             <span className="current-plan-badge">
-              Current Plan: {userPlan.plan.charAt(0).toUpperCase() + userPlan.plan.slice(1)}
+              Current Plan:{" "}
+              {userPlan.plan.charAt(0).toUpperCase() + userPlan.plan.slice(1)}
             </span>
-            <p>Status: <span className={`status-badge ${userPlan.status}`}>{userPlan.status}</span></p>
+            <p>
+              Status:{" "}
+              <span className={`status-badge ${userPlan.status}`}>
+                {userPlan.status}
+              </span>
+            </p>
             {userPlan.expiration && (
               <p>Expires: {new Date(userPlan.expiration).toLocaleString()}</p>
             )}
@@ -109,9 +151,7 @@ export default function Payment() {
         )}
 
         {message && (
-          <div className={`message ${message.type}`}>
-            {message.text}
-          </div>
+          <div className={`message ${message.type}`}>{message.text}</div>
         )}
 
         <div className="plans-grid">
@@ -119,19 +159,29 @@ export default function Payment() {
             <div
               key={plan.id}
               className={`plan-card ${selectedPlan?.id === plan.id ? "selected" : ""} ${
-                userPlan?.plan === plan.id && userPlan?.status === "active" ? "current" : ""
+                userPlan?.plan === plan.id && userPlan?.status === "active"
+                  ? "current"
+                  : ""
               } ${plan.id}`}
             >
-              <div className="plan-icon">
-                {plan.icon}
-              </div>
+              <div className="plan-icon">{plan.icon}</div>
               <h2>{plan.name}</h2>
               <p className="price">Free</p>
               <p className="duration">{plan.duration}</p>
               <ul>
                 {plan.features.map((feature, idx) => (
                   <li key={idx}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
                     {feature}
@@ -141,13 +191,16 @@ export default function Payment() {
               <button
                 onClick={() => handleActivatePlan(plan)}
                 className="plan-button"
-                disabled={loading || (userPlan?.plan === plan.id && userPlan?.status === "active")}
+                disabled={
+                  loading ||
+                  (userPlan?.plan === plan.id && userPlan?.status === "active")
+                }
               >
                 {userPlan?.plan === plan.id && userPlan?.status === "active"
                   ? "Current Plan"
                   : loading && selectedPlan?.id === plan.id
-                  ? "Activating..."
-                  : "Activate"}
+                    ? "Activating..."
+                    : "Activate"}
               </button>
             </div>
           ))}
@@ -156,4 +209,3 @@ export default function Payment() {
     </Layout>
   );
 }
-
