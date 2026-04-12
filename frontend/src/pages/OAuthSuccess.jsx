@@ -5,10 +5,6 @@ import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 
 // Get API URL - uses VITE_API_URL if set, otherwise defaults to localhost
-const getApiUrl = () => {
-  return import.meta.env.VITE_API_URL || "http://localhost:5000";
-};
-
 export default function OAuthSuccess() {
   const navigate = useNavigate();
 
@@ -23,8 +19,7 @@ export default function OAuthSuccess() {
 
         // call backend to get user profile (role etc.)
         try {
-          const apiUrl = getApiUrl();
-          const res = await fetch(`${apiUrl}/auth/me`, {
+          const res = await fetch(`/api/auth/me`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           if (res.ok) {
