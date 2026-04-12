@@ -158,12 +158,12 @@ export const login = async (req, res) => {
       return res.status(401).json({ message: "User does not exist" });
 
     // Check if local user has verified email (skip for OAuth users)
-    if (user.provider === "local" && !user.isEmailVerified) {
-      return res.status(401).json({ 
-        message: "Please verify your email before logging in. Check your inbox for the verification link.",
-        requiresVerification: true
-      });
-    }
+//     if (user.provider === "local" && !user.isEmailVerified) {
+//       return res.status(401).json({ 
+//         message: "Please verify your email before logging in. Check your inbox for the verification link.",
+//         requiresVerification: true
+//       });
+//     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
