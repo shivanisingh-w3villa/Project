@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { loadStripe } from "@stripe/stripe-js";
 import axios from "../api/axios";
 import Layout from "../components/Layout";
 import "../styles/payment.css";
@@ -79,31 +78,7 @@ export default function Payment() {
   const [userPlan, setUserPlan] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
-  const [stripe, setStripe] = useState(null);
   const [plans, setPlans] = useState([]);
-
-  // Initialize Stripe
-  useEffect(() => {
-    const initializeStripe = async () => {
-      try {
-        // Fetch publishable key from backend
-        const response = await axios.get("/payment/plans");
-        if (response.data.publishableKey) {
-          const stripePromise = await loadStripe(response.data.publishableKey);
-          setStripe(stripePromise);
-        } else {
-          // Fallback to hardcoded key
-          const stripePromise = await loadStripe(
-            "pk_test_51TEoJoFjgzvkSgEBjY5h73z9s4a0ikNyIUatWR9IXnsh6SvOCv2NxM77B7uf9kf7zv3t5GzBc7g4ugKEk0HEaVaW00egfjf9JX"
-          );
-          setStripe(stripePromise);
-        }
-      } catch (error) {
-        console.error("Error initializing Stripe:", error);
-      }
-    };
-    initializeStripe();
-  }, []);
 
   // Fetch available plans
   useEffect(() => {
@@ -121,25 +96,28 @@ export default function Payment() {
       } catch (error) {
         if (error.response?.status === 401) {
           setMessage({ type: "error", text: "Please login first" });
-          navigate("/auth");
+          navigate("/");
         } else {
           console.error("Error fetching plans:", error);
         }
       }
     };
     fetchPlans();
-  }, []);
+  }, [navigate]);
 
   // Fetch user's current plan
   useEffect(() => {
     const fetchUserPlan = async () => {
       try {
-        const userId = localStorage.getItem("userId");
-        if (userId) {
-          const response = await axios.get(`/payment/plan-status/${userId}`);
-          setUserPlan(response.data);
-        }
+        const response = await axios.get("/payment/plan-status");
+        setUserPlan(response.data);
       } catch (error) {
+        if (error.response?.status === 401) {
+          setMessage({ type: "error", text: "Please login first" });
+          navigate("/");
+          return;
+        }
+
         console.error("Error fetching plan status:", error);
       }
     };
@@ -148,7 +126,7 @@ export default function Payment() {
     // Refresh plan status every 30 seconds
     const interval = setInterval(fetchUserPlan, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [navigate]);
 
   const handleActivatePlan = async (plan) => {
     if (loading) return;
@@ -158,17 +136,9 @@ export default function Payment() {
     setSelectedPlan(plan);
 
     try {
-      const userId = localStorage.getItem("userId");
-      if (!userId) {
-        navigate("/auth");
-        return;
-      }
-
       // Free plan doesn't require Stripe payment
       if (plan.id === "free") {
-        const response = await axios.post("/payment/activate-free", {
-          userId,
-        });
+        const response = await axios.post("/payment/activate-free");
 
         if (response.data.success) {
           setMessage({
@@ -183,42 +153,37 @@ export default function Payment() {
           });
         }
       } else {
-        // Paid plans use Stripe checkout
-        if (!stripe) {
-          setMessage({
-            type: "error",
-            text: "Payment system not ready",
-          });
-          setLoading(false);
-          return;
-        }
-
         const response = await axios.post("/payment/create-checkout-session", {
-          userId,
           planId: plan.id,
         });
 
-        if (response.data.success) {
-          const result = await stripe.redirectToCheckout({
-            sessionId: response.data.sessionId,
-          });
-
-          if (result.error) {
-            setMessage({
-              type: "error",
-              text: result.error.message,
-            });
-          }
+        if (response.data?.url) {
+          window.location.href = response.data.url;
+          return;
         }
+
+        setMessage({
+          type: "error",
+          text: "Stripe checkout URL was not returned",
+        });
       }
     } catch (error) {
+      if (error.response?.status === 401) {
+        setMessage({
+          type: "error",
+          text: "Please login first",
+        });
+        navigate("/");
+        return;
+      }
+
       setMessage({
         type: "error",
-        text: error.response?.status === 401 ? "Please login first" : error.response?.data?.error || "Failed to activate plan",
+        text: error.response?.data?.error || "Failed to activate plan",
       });
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (

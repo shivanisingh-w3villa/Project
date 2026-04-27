@@ -30,6 +30,7 @@ router.get("/checkout-session/:sessionId", authMiddleware, getCheckoutSessionSta
 router.post("/activate-free", authMiddleware, activateFreePlan);
 
 // Get current user's plan status
+router.get("/plan-status", authMiddleware, getPlanStatus);
 router.get("/plan-status/:userId", authMiddleware, getPlanStatus);
 
 // Get available plans
@@ -39,4 +40,3 @@ router.get("/plans", getPlans);
 router.post("/activate-plan", activateFreePlan);
 
 export default router;
-

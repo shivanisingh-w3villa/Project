@@ -32,17 +32,18 @@ export const PLANS = {
  */
 export const createCheckoutSession = async (req, res) => {
   try {
-    const { planId, userId } = req.body;
+    const { planId } = req.body;
+    const userId = req.user?.id;
 
-    if (req.user.id !== userId) {
-      return res.status(403).json({ 
-        error: "Unauthorized for this user" 
+    if (!userId) {
+      return res.status(401).json({
+        error: "Unauthorized",
       });
     }
 
-    if (!planId || !userId) {
+    if (!planId) {
       return res.status(400).json({ 
-        error: "Missing planId or userId" 
+        error: "Missing planId" 
       });
     }
 
@@ -89,8 +90,7 @@ export const createCheckoutSession = async (req, res) => {
 
     res.json({ 
       success: true, 
-      sessionId: session.id,
-      publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+      url: session.url,
     });
   } catch (error) {
     console.error("Checkout session creation error:", error);
@@ -229,17 +229,11 @@ export const getCheckoutSessionStatus = async (req, res) => {
  */
 export const activateFreePlan = async (req, res) => {
   try {
-    const { userId } = req.body;
-
-    if (req.user.id !== userId) {
-      return res.status(403).json({ 
-        error: "Unauthorized for this user" 
-      });
-    }
+    const userId = req.user?.id;
 
     if (!userId) {
-      return res.status(400).json({ 
-        error: "Missing userId" 
+      return res.status(401).json({
+        error: "Unauthorized",
       });
     }
 
@@ -278,13 +272,15 @@ export const activateFreePlan = async (req, res) => {
  */
 export const getPlanStatus = async (req, res) => {
   try {
-    if (req.user.id !== req.params.userId) {
-      return res.status(403).json({ 
-        error: "Unauthorized for this user" 
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({
+        error: "Unauthorized",
       });
     }
 
-    const user = await User.findById(req.params.userId).select(
+    const user = await User.findById(userId).select(
       "plan planExpiration planStatus"
     );
 
