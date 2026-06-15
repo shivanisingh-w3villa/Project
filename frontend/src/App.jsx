@@ -10,6 +10,8 @@ import Payment from "./pages/Payment";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCancel from "./pages/PaymentCancel";
 import Admin from "./pages/Admin";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 import ProtectedRoute from "./components/ProtectedRoute";
 import API from "./api/axios";
 import "./App.css";
@@ -46,6 +48,10 @@ function App() {
 
         {/* OAuth Redirect */}
         <Route path="/oauth-success" element={<OAuthSuccess />} />
+
+        {/* Public Legal Pages */}
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
 
         {/* Protected Home */}
         <Route

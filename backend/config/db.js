@@ -2,6 +2,8 @@
 
 import mongoose from "mongoose";
 
+mongoose.set("bufferCommands", false);
+
 const connectDB = async () => {
   try {
     const mongoURI = process.env.MONGO_URI;

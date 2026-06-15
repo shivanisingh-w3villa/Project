@@ -143,9 +143,36 @@ APP LAYOUT STYLES
   background-color: var(--white);
   border-top: 1px solid var(--border-color);
   padding: var(--spacing-lg);
-  text-align: center;
   color: var(--text-muted);
   font-size: var(--font-size-sm);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.footer-links a {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.footer-links a:hover {
+  color: var(--primary);
+}
+
+.legal-nav-links {
+  gap: var(--spacing-xs);
 }
 
 /* Home Page */
@@ -229,6 +256,16 @@ APP LAYOUT STYLES
 
   .main-content {
     padding: 0 var(--spacing-md);
+  }
+
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-links {
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }
 

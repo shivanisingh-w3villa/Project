@@ -20,6 +20,7 @@ dotenv.config();
 connectDB();
 
 const app = express();   // ✅ APP MUST BE CREATED BEFORE USE
+let hasLoggedCronDbSkip = false;
 
 // Get frontend URLs from environment or use defaults
 const getCorsOrigin = () => {
@@ -110,8 +111,19 @@ app.use("/admin", adminRoutes);
 
 app.use("/uploads", express.static("uploads"));
 
-// Cron job to check and expire plans every minute
-cron.schedule("* * * * *", async () => {
+const isDatabaseConnected = () => mongoose.connection.readyState === 1;
+
+const runPlanExpirationCheck = async () => {
+  if (!isDatabaseConnected()) {
+    if (!hasLoggedCronDbSkip) {
+      console.warn("[CRON] Skipping plan expiration check because MongoDB is disconnected");
+      hasLoggedCronDbSkip = true;
+    }
+    return;
+  }
+
+  hasLoggedCronDbSkip = false;
+
   try {
     const now = new Date();
     
@@ -134,7 +146,10 @@ cron.schedule("* * * * *", async () => {
   } catch (error) {
     console.error("Error in plan expiration cron job:", error);
   }
-});
+};
+
+// Cron job to check and expire plans every minute
+cron.schedule("* * * * *", runPlanExpirationCheck);
 
 const PORT = process.env.PORT || 5000;
 
