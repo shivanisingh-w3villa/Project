@@ -76,9 +76,9 @@ export default function Auth() {
     return "http://localhost:5000";
   };
 
-  const socialLogin = (provider) => {
+  const googleLogin = () => {
     const apiUrl = getApiUrl();
-    window.location.href = `${apiUrl}/auth/${provider}`;
+    window.location.href = `${apiUrl}/auth/google`;
   };
 
   return (
@@ -195,7 +195,7 @@ export default function Auth() {
         </div>
 
         <div className="social-buttons">
-          <button onClick={() => socialLogin("google")} className="btn-social">
+          <button onClick={googleLogin} className="btn-social">
             Continue with Google
           </button>
         </div>
