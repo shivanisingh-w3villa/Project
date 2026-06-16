@@ -283,6 +283,10 @@ export const getCheckoutSessionStatus = async (req, res) => {
       }
     }
 
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+    res.set("Pragma", "no-cache");
+    res.set("Expires", "0");
+
     res.json({
       success: true,
       sessionId: session.id,
@@ -387,6 +391,10 @@ export const getPlanStatus = async (req, res) => {
       // Calculate remaining time in milliseconds
       remainingTime = user.planExpiration.getTime() - now.getTime();
     }
+
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+    res.set("Pragma", "no-cache");
+    res.set("Expires", "0");
 
     res.json({
       plan: user.plan,
