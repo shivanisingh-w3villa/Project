@@ -29,7 +29,7 @@ export default function Layout({
       <nav className="navbar">
         <div className="navbar-brand" onClick={() => navigate(brandLink)}>
           <div className="navbar-logo">A</div>
-          <span>AppName</span>
+          <span>Accountly</span>
         </div>
 
         <div className="navbar-nav">
