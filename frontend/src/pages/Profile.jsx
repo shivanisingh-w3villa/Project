@@ -21,6 +21,13 @@ export default function Profile() {
   const [remainingTime, setRemainingTime] = useState(0);
   const [deletingProfile, setDeletingProfile] = useState(false);
 
+  const fetchPlanStatus = async () => {
+    const planRes = await API.get("/payment/plan-status");
+    setUserPlan(planRes.data);
+    setRemainingTime(planRes.data.remainingTime || 0);
+    return planRes.data;
+  };
+
   // Format remaining time as HH:MM:SS
   const formatTime = (ms) => {
     if (!ms || ms <= 0) return "00:00:00";
@@ -75,12 +82,7 @@ export default function Profile() {
         geocodeAddress(res.data.address);
       }
 
-      const userId = localStorage.getItem("userId");
-      if (userId) {
-        const planRes = await API.get(`/payment/plan-status/${userId}`);
-        setUserPlan(planRes.data);
-        setRemainingTime(planRes.data.remainingTime || 0);
-      }
+      await fetchPlanStatus();
     } catch (err) {
       console.error("Profile fetch failed", err);
     } finally {
@@ -92,6 +94,27 @@ export default function Profile() {
     fetchProfile();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchPlanStatus().catch((error) => {
+        console.error("Plan status refresh failed", error);
+      });
+    }, 30000);
+
+    const refreshOnFocus = () => {
+      fetchPlanStatus().catch((error) => {
+        console.error("Plan status refresh failed", error);
+      });
+    };
+
+    window.addEventListener("focus", refreshOnFocus);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("focus", refreshOnFocus);
+    };
+  }, []);
+
   // Countdown timer effect
   useEffect(() => {
     if (!remainingTime || userPlan?.plan === "free") return;
@@ -100,7 +123,9 @@ export default function Profile() {
       setRemainingTime((prev) => {
         if (prev <= 1000) {
           // Time expired, refetch to get updated plan
-          fetchProfile();
+          fetchPlanStatus().catch((error) => {
+            console.error("Plan status refresh failed", error);
+          });
           return 0;
         }
         return prev - 1000;
@@ -259,6 +284,10 @@ export default function Profile() {
       </Layout>
     );
 
+  const isFreePlan = !userPlan || userPlan.plan === "free";
+  const isActivePaidPlan = userPlan && userPlan.plan !== "free" && userPlan.status === "active";
+  const planLabel = userPlan?.plan?.toUpperCase() || "FREE";
+
   return (
     <Layout showBackButton backLink="/home">
       <div className="profile-container">
@@ -387,9 +416,9 @@ export default function Profile() {
                   <div className="plan-info">
                     <div className="plan-badge-container">
                       <span
-                        className={`plan-badge ${userPlan.plan === "free" ? "active" : ""} ${userPlan.plan}`}
+                        className={`plan-badge ${isFreePlan ? "active" : ""} ${userPlan.plan}`}
                       >
-                        {userPlan.plan === "free" && (
+                        {isFreePlan && (
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="16"
@@ -404,7 +433,7 @@ export default function Profile() {
                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                           </svg>
                         )}
-                        {userPlan.plan === "silver" && (
+                        {userPlan?.plan === "silver" && (
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="16"
@@ -419,7 +448,7 @@ export default function Profile() {
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                           </svg>
                         )}
-                        {userPlan.plan === "gold" && (
+                        {userPlan?.plan === "gold" && (
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="16"
@@ -434,15 +463,19 @@ export default function Profile() {
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                           </svg>
                         )}
-                        {userPlan.plan?.toUpperCase()}
+                        {planLabel}
                       </span>
-                      {userPlan.status === "active" && (
+                      {isActivePaidPlan ? (
                         <span className="plan-status active-status">
                           Active
                         </span>
+                      ) : (
+                        <span className="plan-status active-status">
+                          Free Plan
+                        </span>
                       )}
                     </div>
-                    {userPlan.expiration && (
+                    {isActivePaidPlan && userPlan.expiration && (
                       <div className="plan-expiration">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -464,7 +497,7 @@ export default function Profile() {
                         </strong>
                       </div>
                     )}
-                    {remainingTime > 0 && userPlan.plan !== "free" && (
+                    {remainingTime > 0 && isActivePaidPlan && (
                       <div className="plan-timer">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -492,7 +525,7 @@ export default function Profile() {
                       className="upgrade-button"
                       onClick={() => navigate("/payment")}
                     >
-                      {userPlan.plan === "free" ? (
+                      {isFreePlan ? (
                         <>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
