@@ -15,6 +15,7 @@ import profileRoutes from "./routes/profileRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import User from "./models/user.js";
+import { activateQueuedPlan } from "./controllers/paymentController.js";
 
 dotenv.config();
 connectDB();
@@ -126,7 +127,22 @@ const runPlanExpirationCheck = async () => {
 
   try {
     const now = new Date();
-    
+
+    const queuedUsers = await User.find({
+      pendingPlan: { $in: ["silver", "gold"] },
+      paymentCompletedAt: { $ne: null },
+      planStatus: "pending",
+    });
+
+    for (const user of queuedUsers) {
+      try {
+        await activateQueuedPlan(user);
+        console.log(`[CRON] Activated ${user.plan} plan for user ${user._id}`);
+      } catch (activationError) {
+        console.error(`[CRON] Failed to activate queued plan for user ${user._id}:`, activationError);
+      }
+    }
+
     // Find expired users and reset them to free plan
     const expiredUsers = await User.updateMany(
       {
@@ -136,6 +152,7 @@ const runPlanExpirationCheck = async () => {
       { 
         plan: "free",
         planExpiration: null,
+        planActivatedAt: null,
         planStatus: "expired"
       }
     );

@@ -88,7 +88,10 @@ router.put("/user/:userId/plan", async (req, res) => {
       {
         plan,
         planExpiration: planExpiration ? new Date(planExpiration) : null,
+        planActivatedAt: plan === "free" ? null : new Date(),
         planStatus: "active",
+        pendingPlan: null,
+        paymentCompletedAt: null,
       },
       { returnDocument: "after" }
     );
@@ -142,6 +145,10 @@ router.delete("/user/:userId", async (req, res) => {
     targetUser.profileImage = null;
     targetUser.plan = "free";
     targetUser.planExpiration = null;
+    targetUser.planActivatedAt = null;
+    targetUser.planStatus = "expired";
+    targetUser.pendingPlan = null;
+    targetUser.paymentCompletedAt = null;
     await targetUser.save();
 
     res.json({ message: "User deleted successfully" });

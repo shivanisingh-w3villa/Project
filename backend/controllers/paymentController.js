@@ -58,6 +58,15 @@ export const PLANS = {
   },
 };
 
+const getPlanExpirationFromStart = (planId, startedAt = new Date()) => {
+  const plan = PLANS[planId];
+  if (!plan?.duration) {
+    return null;
+  }
+
+  return new Date(startedAt.getTime() + plan.duration);
+};
+
 /**
  * Create a checkout session for Stripe payment
  * POST /payment/create-checkout-session
@@ -185,21 +194,27 @@ const handleCheckoutSessionCompleted = async (session) => {
     return;
   }
 
-  // Calculate plan expiration
-  const expiration = plan.duration 
-    ? new Date(Date.now() + plan.duration) 
-    : null;
-
   try {
+    const activatedAt = new Date();
+    const expiration = getPlanExpirationFromStart(planId, activatedAt);
+
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
         plan: planId,
         planExpiration: expiration,
+        planActivatedAt: activatedAt,
         planStatus: "active",
+        pendingPlan: null,
+        paymentCompletedAt: activatedAt,
       },
       { returnDocument: "after" }
     );
+
+    if (!updatedUser) {
+      console.error(`User not found for paid plan activation: ${userId}`);
+      return;
+    }
 
     console.log(`Plan ${planId} activated for user ${userId}`);
     console.log(`Plan expires at: ${expiration}`);
@@ -271,7 +286,10 @@ export const activateFreePlan = async (req, res) => {
       {
         plan: "free",
         planExpiration: null,
+        planActivatedAt: null,
         planStatus: "active",
+        pendingPlan: null,
+        paymentCompletedAt: null,
       },
       { returnDocument: "after" }
     );
@@ -310,7 +328,7 @@ export const getPlanStatus = async (req, res) => {
     }
 
     const user = await User.findById(userId).select(
-      "plan planExpiration planStatus"
+      "plan planExpiration planStatus pendingPlan paymentCompletedAt planActivatedAt"
     );
 
     if (!user) {
@@ -328,6 +346,7 @@ export const getPlanStatus = async (req, res) => {
       // Plan has expired, mark as expired
       user.plan = "free";
       user.planExpiration = null;
+      user.planActivatedAt = null;
       user.planStatus = "expired";
       isExpired = true;
       await user.save();
@@ -338,7 +357,10 @@ export const getPlanStatus = async (req, res) => {
 
     res.json({
       plan: user.plan,
+      pendingPlan: user.pendingPlan,
       expiration: user.planExpiration,
+      activatedAt: user.planActivatedAt,
+      paymentCompletedAt: user.paymentCompletedAt,
       status: user.planStatus,
       remainingTime: remainingTime > 0 ? remainingTime : 0,
       isExpired: isExpired,
@@ -375,4 +397,23 @@ export const getPlans = async (req, res) => {
       error: error.message || "Failed to fetch plans" 
     });
   }
+};
+
+export const activateQueuedPlan = async (user) => {
+  const planId = user.pendingPlan;
+  const plan = PLANS[planId];
+
+  if (!plan) {
+    throw new Error(`Invalid pending plan: ${planId}`);
+  }
+
+  const activatedAt = new Date();
+  user.plan = planId;
+  user.planActivatedAt = activatedAt;
+  user.planExpiration = getPlanExpirationFromStart(planId, activatedAt);
+  user.planStatus = "active";
+  user.pendingPlan = null;
+  await user.save();
+
+  return user;
 };

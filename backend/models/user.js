@@ -67,10 +67,24 @@ const userSchema = new mongoose.Schema(
       type: Date,
     },
 
+    planActivatedAt: {
+      type: Date,
+    },
+
     planStatus: {
       type: String,
-      enum: ["active", "expired"],
+      enum: ["pending", "active", "expired"],
       default: "active",
+    },
+
+    pendingPlan: {
+      type: String,
+      enum: ["free", "silver", "gold", null],
+      default: null,
+    },
+
+    paymentCompletedAt: {
+      type: Date,
     },
 
     // role field for authorization

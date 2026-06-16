@@ -25,20 +25,31 @@ export default function PaymentSuccess() {
         const response = await axios.get(`/payment/checkout-session/${sessionId}`);
 
         if (response.data.paymentStatus === "paid") {
-          setStatus("success");
-          setMessage(
-            `Payment successful! Your ${planId.toUpperCase()} plan is now active.`
-          );
+          const planStatusResponse = await axios.get("/payment/plan-status");
+          const currentStatus = planStatusResponse.data.status;
+          const currentPlan = planStatusResponse.data.plan;
 
-          // Redirect to payment page after 3 seconds
-          setTimeout(() => {
-            navigate("/payment");
-          }, 3000);
+          if (currentStatus === "active" && currentPlan === planId) {
+            setStatus("success");
+            setMessage(
+              `Payment successful! Your ${planId.toUpperCase()} plan is now active.`
+            );
+
+            setTimeout(() => {
+              navigate("/payment");
+            }, 3000);
+            return;
+          }
+
+          setStatus("pending");
+          setMessage(
+            `Payment received. Activating your ${planId.toUpperCase()} plan.`
+          );
+          setTimeout(verifyPayment, 2000);
         } else {
           setStatus("pending");
           setMessage("Payment is being processed. Please wait...");
 
-          // Retry after 2 seconds
           setTimeout(verifyPayment, 2000);
         }
       } catch (error) {
