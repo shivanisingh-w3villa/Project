@@ -1,10 +1,5 @@
-//profileController.js
-
-import fs from "fs";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
-import s3 from "../config/s3.js";
 import User from "../models/user.js";
-import { uploadToStorj } from "../services/storjService.js";
+import { uploadProfileImageLocally } from "../services/localUploadService.js";
 
 
 
@@ -54,8 +49,11 @@ export const updateAddress = async (req, res) => {
 
 export const uploadProfilePicture = async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ message: "Please select an image to upload" });
+    }
 
-    const imageUrl = await uploadToStorj(req.file);
+    const imageUrl = await uploadProfileImageLocally(req.file, req);
 
     await User.findByIdAndUpdate(req.user.id, {
       profileImage: imageUrl,
@@ -68,7 +66,9 @@ export const uploadProfilePicture = async (req, res) => {
 
   } catch (error) {
     console.error("Upload error:", error);
-    res.status(500).json({ message: "Image upload failed" });
+    res.status(error.statusCode || 500).json({
+      message: error.statusCode ? error.message : "Image upload failed",
+    });
   }
 };
 
@@ -119,4 +119,3 @@ export const deleteProfile = async (req, res) => {
     res.status(500).json({ message: "Failed to delete profile" });
   }
 };
-

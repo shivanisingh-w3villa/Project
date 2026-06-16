@@ -7,6 +7,8 @@ import passport from "passport";
 import session from "express-session";
 import cron from "node-cron";
 import mongoose from "mongoose";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import connectDB from "./config/db.js";
 import "./config/passport.js";
@@ -20,6 +22,8 @@ import { activateQueuedPlan } from "./controllers/paymentController.js";
 dotenv.config();
 connectDB();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const app = express();   // ✅ APP MUST BE CREATED BEFORE USE
 let hasLoggedCronDbSkip = false;
 
@@ -110,7 +114,7 @@ app.use("/profile", profileRoutes);  // ✅ AFTER app is declared
 app.use("/payment", paymentRoutes);
 app.use("/admin", adminRoutes);
 
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const isDatabaseConnected = () => mongoose.connection.readyState === 1;
 
