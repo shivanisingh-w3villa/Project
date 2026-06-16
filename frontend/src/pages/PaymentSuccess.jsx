@@ -25,6 +25,18 @@ export default function PaymentSuccess() {
         const response = await axios.get(`/payment/checkout-session/${sessionId}`);
 
         if (response.data.paymentStatus === "paid") {
+          if (response.data.activatedPlan) {
+            setStatus("success");
+            setMessage(
+              `Payment successful! Your ${planId.toUpperCase()} plan is now active.`
+            );
+
+            setTimeout(() => {
+              navigate("/payment");
+            }, 3000);
+            return;
+          }
+
           const planStatusResponse = await axios.get("/payment/plan-status");
           const currentStatus = planStatusResponse.data.status;
           const currentPlan = planStatusResponse.data.plan;

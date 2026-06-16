@@ -67,6 +67,29 @@ const getPlanExpirationFromStart = (planId, startedAt = new Date()) => {
   return new Date(startedAt.getTime() + plan.duration);
 };
 
+const activatePaidPlanForUser = async (userId, planId, activatedAt = new Date()) => {
+  const plan = PLANS[planId];
+  if (!plan) {
+    throw new Error(`Invalid plan: ${planId}`);
+  }
+
+  const expiration = getPlanExpirationFromStart(planId, activatedAt);
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    {
+      plan: planId,
+      planExpiration: expiration,
+      planActivatedAt: activatedAt,
+      planStatus: "active",
+      pendingPlan: null,
+      paymentCompletedAt: activatedAt,
+    },
+    { returnDocument: "after" }
+  );
+
+  return { updatedUser, expiration };
+};
+
 /**
  * Create a checkout session for Stripe payment
  * POST /payment/create-checkout-session
@@ -188,27 +211,12 @@ const handleCheckoutSessionCompleted = async (session) => {
     return;
   }
 
-  const plan = PLANS[planId];
-  if (!plan) {
-    console.error(`Invalid plan: ${planId}`);
-    return;
-  }
-
   try {
     const activatedAt = new Date();
-    const expiration = getPlanExpirationFromStart(planId, activatedAt);
-
-    const updatedUser = await User.findByIdAndUpdate(
+    const { updatedUser, expiration } = await activatePaidPlanForUser(
       userId,
-      {
-        plan: planId,
-        planExpiration: expiration,
-        planActivatedAt: activatedAt,
-        planStatus: "active",
-        pendingPlan: null,
-        paymentCompletedAt: activatedAt,
-      },
-      { returnDocument: "after" }
+      planId,
+      activatedAt
     );
 
     if (!updatedUser) {
@@ -250,14 +258,39 @@ export const getCheckoutSessionStatus = async (req, res) => {
     const { sessionId } = req.params;
 
     const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const sessionPlanId = session.metadata?.planId;
+    const sessionUserId = session.metadata?.userId;
+    let activatedPlan = false;
+
+    if (session.payment_status === "paid" && sessionPlanId && sessionUserId) {
+      const existingUser = await User.findById(sessionUserId).select(
+        "plan planStatus planExpiration"
+      );
+
+      const shouldActivatePlan =
+        existingUser &&
+        (existingUser.plan !== sessionPlanId ||
+          existingUser.planStatus !== "active" ||
+          !existingUser.planExpiration);
+
+      if (shouldActivatePlan) {
+        const { updatedUser } = await activatePaidPlanForUser(
+          sessionUserId,
+          sessionPlanId,
+          new Date()
+        );
+        activatedPlan = Boolean(updatedUser);
+      }
+    }
 
     res.json({
       success: true,
       sessionId: session.id,
       paymentStatus: session.payment_status,
       customerId: session.customer_details?.email,
-      planId: session.metadata?.planId,
-      userId: session.metadata?.userId,
+      planId: sessionPlanId,
+      userId: sessionUserId,
+      activatedPlan,
     });
   } catch (error) {
     console.error("Error retrieving checkout session:", error);
