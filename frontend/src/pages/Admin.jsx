@@ -1,5 +1,5 @@
 // filepath: frontend/src/pages/Admin.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "../api/axios";
 import Layout from "../components/Layout";
 import "../styles/admin.css";
@@ -42,7 +42,8 @@ export default function Admin() {
 
         users.forEach((user) => {
           if (user.remainingTime > 0 && user.plan !== "free") {
-            const newTime = Math.max(0, user.remainingTime - 1000);
+            const currentTime = prev[user._id] ?? user.remainingTime;
+            const newTime = Math.max(0, currentTime - 1000);
             if (newTime !== prev[user._id]) {
               newTimes[user._id] = newTime;
               hasUpdate = true;
@@ -57,7 +58,7 @@ export default function Admin() {
     return () => clearInterval(timer);
   }, [users]);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
       const response = await axios.get("/admin/users", {
@@ -72,6 +73,14 @@ export default function Admin() {
       });
 
       setUsers(response.data.users);
+      setRemainingTimes(
+        response.data.users.reduce((times, user) => {
+          if (user.remainingTime > 0 && user.plan !== "free") {
+            times[user._id] = user.remainingTime;
+          }
+          return times;
+        }, {}),
+      );
       setTotal(response.data.total || 0);
       setTotalPages(response.data.totalPages || 1);
     } catch (error) {
@@ -79,11 +88,11 @@ export default function Admin() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [limit, page, planFilter, roleFilter, search, statusFilter]);
 
   useEffect(() => {
     fetchUsers();
-  }, [search, planFilter, statusFilter, roleFilter, page]);
+  }, [fetchUsers]);
 
   // update both plan and role if provided
   const updateUser = async (userId, plan, planExpiration, role) => {
@@ -216,11 +225,16 @@ export default function Admin() {
                           <span className="admin-expiration">
                             {new Date(user.planExpiration).toLocaleString()}
                           </span>
-                          {remainingTimes[user._id] > 0 && (
+                          {(remainingTimes[user._id] ?? user.remainingTime) >
+                            0 && (
                             <span className="admin-countdown">
-                              {formatTime(
-                                remainingTimes[user._id] || user.remainingTime,
-                              )}
+                              Time Remaining:{" "}
+                              <strong className="timer-countdown">
+                                {formatTime(
+                                  remainingTimes[user._id] ||
+                                    user.remainingTime,
+                                )}
+                              </strong>
                             </span>
                           )}
                         </div>

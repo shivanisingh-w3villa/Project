@@ -185,14 +185,28 @@ ADMIN PAGE - PROFESSIONAL STYLES
 }
 
 .admin-countdown {
+  width: fit-content;
+  max-width: 100%;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #f59e0b;
+  border-radius: var(--border-radius);
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-xs);
+}
+
+.admin-countdown .timer-countdown {
   font-family: "Courier New", monospace;
   font-size: var(--font-size-sm);
   font-weight: 700;
-  color: #d97706;
-  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+  background: rgba(255, 255, 255, 0.5);
   padding: 2px 8px;
   border-radius: 4px;
-  display: inline-block;
 }
 
 /* Pagination */
